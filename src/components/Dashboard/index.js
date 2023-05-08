@@ -32,14 +32,26 @@ const Dashboard = () => {
                 error
             })
         })
-    }, [])
+    }, []);
+
+    const createNewMessage = (text) => {
+        const newMessage = {
+            body: text,
+            id: state.messages.length+1,
+            user
+        }
+        dispatch({
+            type: ACTIONTYPES.ADD_NEW_MESSAGE,
+            payload: newMessage
+        });
+    }
 
     return (
         <div className={styles['flex-row']}>
         <DialogList /> 
         <div className={styles['flex-column']}>
             <Chat messages={state.messages}/> 
-            <MessageArea /> 
+            <MessageArea addMessage={createNewMessage}/> 
             </div>
         </div>
     );

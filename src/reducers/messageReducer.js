@@ -16,8 +16,17 @@ function reducer(state, action) {
                 error: action.error
             }
         }
+        case ACTIONTYPES.ADD_NEW_MESSAGE: {
+            return {
+                ...state,
+                messages: [...state.messages,
+                    action.payload]
+            }
+        }
+        default: 
+            return state;
     }
-    return state;
+
 }
 
 
