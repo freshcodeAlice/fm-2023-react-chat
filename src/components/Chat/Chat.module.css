@@ -1,0 +1,6 @@
+.chat {
+
+    align-self: stretch;
+    background-color: bisque;
+    flex-grow: 5;
+}
