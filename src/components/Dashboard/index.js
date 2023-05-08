@@ -1,12 +1,13 @@
-import React, {useState, useReducer, useEffect} from 'react';
+import React, { useState, useReducer, useEffect } from 'react';
 import styles from './Dashboard.module.css';
 import DialogList from '../DialogList';
 import Chat from '../Chat';
 import MessageArea from '../MessageArea';
 import { getMessages } from '../../api/getMessages';
 import reducer from '../../reducers/messageReducer';
+import UserContext from '../../contexts/UserContext';
 import { CONSTANTS } from '../../constants';
-const {ACTIONTYPES} = CONSTANTS; 
+const { ACTIONTYPES } = CONSTANTS;
 
 const Dashboard = () => {
     const [user, setUser] = useState({
@@ -19,25 +20,25 @@ const Dashboard = () => {
         error: null
     });
 
-    useEffect(()=>{
+    useEffect(() => {
         getMessages()
-        .then(data => {
-            dispatch({
-                type: ACTIONTYPES.GET_MESSAGE_SUCCESS,
-                payload: data.comments
+            .then(data => {
+                dispatch({
+                    type: ACTIONTYPES.GET_MESSAGE_SUCCESS,
+                    payload: data.comments
+                })
+            }).catch(error => {
+                dispatch({
+                    type: ACTIONTYPES.GET_MESSAGE_ERROR,
+                    error
+                })
             })
-        }).catch(error => {
-            dispatch({
-                type: ACTIONTYPES.GET_MESSAGE_ERROR,
-                error
-            })
-        })
     }, []);
 
     const createNewMessage = (text) => {
         const newMessage = {
             body: text,
-            id: state.messages.length+1,
+            id: state.messages.length + 1,
             user
         }
         dispatch({
@@ -47,13 +48,15 @@ const Dashboard = () => {
     }
 
     return (
-        <div className={styles['flex-row']}>
-        <DialogList /> 
-        <div className={styles['flex-column']}>
-            <Chat messages={state.messages}/> 
-            <MessageArea addMessage={createNewMessage}/> 
-            </div>
-        </div>
+        <UserContext.Provider value={user}>
+            <main className={styles['flex-row']}>
+                <DialogList />
+                <div className={styles['flex-column']}>
+                    <Chat messages={state.messages} />
+                    <MessageArea addMessage={createNewMessage} />
+                </div>
+            </main>
+        </UserContext.Provider>
     );
 }
 
